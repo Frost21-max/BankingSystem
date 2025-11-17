@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <mysql/mysql.h>
 
-#define PASSWD "Mydatabases@123"
+#define PASSWD "PiyushBisht8275@"
 #define USER "root"
 
 
@@ -78,14 +78,14 @@ void mysql_query_excuter(const char *query ,const char *databases ) {
     }
 
     // Execute query
-    if (mysql_query(conn, query)) {
-        printf("Query execution failed: %s\n", mysql_error(conn));
-        mysql_close(conn);
-        return;
-    }
+//     if (mysql_query(conn, query)) {
+//         printf("Query execution failed: %s\n", mysql_error(conn));
+//         mysql_close(conn);
+//         return;
+//     }
 
-    mysql_close(conn);
-}
+//     mysql_close(conn);
+// }
 
 // void account_creation(){
     
