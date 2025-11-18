@@ -66,69 +66,43 @@ int main(int argc, char const *argv[])
 Account acc;
 int user_menu()
 {
-    printf("Write down your name.");
-    scanf("%s", &acc.name);
-    printf("Write down your age.");
-    scanf("%u", &acc.age);
-    printf("Write down your Date of Birth(YYYY-MM-DD).");
-    scanf("%10s", &acc.date_of_birth);
-    printf("Write down your Gender(Male,Female,Other).");
-    char temp[10];
-    scanf("%s", &temp);
-    char temp1[10] = toupper(temp);
-    if (strcmp(temp1,"MALE") == 0)
-    {
-        strcpy(acc.gender,"MALE");
+    printf("Enter your Name: ");
+    fgets(acc.name, sizeof(acc.name), stdin); // for name
+    acc.name[strcspn(acc.name, "\n")] = 0;
+    // printf("%s\n", acc.name);
+
+    char ageStr[10];
+
+    printf("Enter your age: ");
+    fgets(ageStr, sizeof(ageStr), stdin);   // for age
+    ageStr[strcspn(ageStr, "\n")] = '\0';     // this replace the \n with string terminater      
+    acc.age = (unsigned int)strtoul(ageStr, NULL, 10); // strtoul convert str to unsinged long int
+    // printf("%u\n", acc.age);
+
+    char genderS[10];
+
+    printf("Enter your Gender: ");
+    fgets(genderS, sizeof(genderS),stdin);
+    genderS[strcspn(genderS, "\n")] = '\0';
+    for (int i = 0; genderS[i]; i++) {
+        genderS[i] = tolower(genderS[i]);
     }
-    else if (strcmp(temp1,"FEMALE") == 0)
+    genderS[0] = toupper(genderS[0]);
+    if (strcmp(genderS,"Male") == 0)
     {
-        strcpy(acc.gender,"FEMALE");
+        strcpy(acc.gender,"Male");
     }
-    else
+    else if (strcmp(genderS,"Female") == 0)
     {
-        strcpy(acc.gender,"OTHER");
-    }
-    
-   
-    printf("Write down your Aadhar Number.");
-    scanf("%s", &acc.aadhar_no);
-    printf("Write down your Pan Number.");
-    scanf("%s", &acc.pan_no);
-    printf("Write down your Phone Number.");
-    scanf("%s", &acc.phone);
-    printf("Write down your age.");
-    scanf("%s", &acc.email);
-    printf("Write down your Type of Account(Savings,Current).");
-    char temp2[10];
-    scanf("%s", &temp2);
-    char temp3[10] = isupper(temp2);
-    if (strcmp(temp2,"SAVINGS") == 0)
-    {
-        strcpy(acc.gender,"SAVINGS");
+        strcpy(acc.gender,"Female");
     }
     else
     {
-        strcpy(acc.gender,"CURRENT");
+        strcpy(acc.gender,"Other");
+    }
+    // printf("%s",acc.gender);
+
     
 
-    char query[1024];
 
-    sprintf(query,
-            "INSERT INTO your_table_name (account_no, name, age, gender, date_of_birth, Aadhar_no, Pan_no, phone, email, balance, account_type, created_at, updated_at) "
-            "VALUES (0000000000, '%s', %u, %d, '%s', '%s', '%s', '%s', '%s', %llu, %d, NOW(), NOW());",
-            acc.account_no,
-            acc.name,
-            acc.age,
-            acc.gender,
-            acc.date_of_birth,
-            acc.aadhar_no,
-            acc.pan_no,
-            acc.phone,
-            acc.email,
-            acc.balance,
-            acc.account_type);
-
-    mysql_query_excuter(query, "account_information");
-
-    return 0;
 }
