@@ -102,6 +102,14 @@ int user_menu()
     }
     // printf("%s",acc.gender);
 
+    printf("Enter the date of birth (yyyy-mm-dd):");
+    fgets(acc.date_of_birth, sizeof(acc.date_of_birth),stdin);
+    acc.date_of_birth[strcspn(acc.date_of_birth, "\n")] = '\0';
+    // printf("%s",acc.date_of_birth);
+
+    // do the for loop here and get hte dob right
+
+
     
 
 
