@@ -199,7 +199,7 @@ int user_menu()
         printf("Enter the PAN Number :");
         fgets(acc.pan_no, sizeof(acc.pan_no), stdin);
         acc.pan_no[strcspn(acc.pan_no, "\n")] = 0;
-        if (strlen(acc.pan_no) == 12)
+        if (strlen(acc.pan_no) == 10)
         {
             break;
         }
