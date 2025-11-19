@@ -71,13 +71,14 @@ int user_menu()
     // ---------------------- account no ----------------------
     srand(time(NULL));
     char n[13];
-    for(int i=0;i<12;i++) n[i] = '0' + rand()%10;
+    for (int i = 0; i < 12; i++)
+        n[i] = '0' + rand() % 10;
     n[12] = '\0';
     acc.account_no = strtoull(n, NULL, 10); // here 10 means base decimal of 10
 
     // printf("%llu\n", acc.account_no);
-    
-     // ---------------------- NAME ----------------------
+
+    // ---------------------- NAME ----------------------
     printf("Enter your Name: ");
     fgets(acc.name, sizeof(acc.name), stdin); // for name
     acc.name[strcspn(acc.name, "\n")] = 0;
@@ -109,7 +110,6 @@ int user_menu()
     // printf("%s",acc.gender);
 
     // ---------------------- DATE OF BIRTH ----------------------
-
 
     printf("Enter the date of birth (yyyy-mm-dd): ");
 
@@ -153,7 +153,7 @@ int user_menu()
                 }
                 else
                 {
-                    printf("You must be at least 18 years old! Enter again: ");
+                    printf("You must be at least 18 years old!\n Enter again: ");
                     continue;
                 }
             }
@@ -168,9 +168,27 @@ int user_menu()
     }
 
     // ---------------------- aadhar no ----------------------
-    printf("Enter the aadhar Number :");
-    fgets(acc.aadhar_no, sizeof(acc.aadhar_no), stdin);
-    acc.aadhar_no[strcspn(acc.aadhar_no, "\n")] = 0;
+    while (1)
+    {
 
-    printf("%s",acc.aadhar_no);
+        printf("Enter the aadhar Number :");
+        fgets(acc.aadhar_no, sizeof(acc.aadhar_no), stdin);
+        acc.aadhar_no[strcspn(acc.aadhar_no, "\n")] = 0;
+        int ok = 1;
+        if (strlen(acc.aadhar_no) == 12)
+        {
+            for (int i = 0; i < 12; i++)
+                if (!isdigit(acc.aadhar_no[i]))
+                    ok = 0;
+            if (ok)
+            {
+                break;
+            }
+
+        }
+        printf("Invalid Aadhar! Try again.\n");
+
+        
+    }
+    // printf("%s", acc.aadhar_no);
 }
