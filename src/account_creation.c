@@ -1,116 +1,3 @@
-// #include <stdio.h>
-// #include <mysql/mysql.h>
-// #include <termios.h>
-// #include <unistd.h>
-// #include <ctype.h>
-// #include <string.h>
-
-// #define PASSWD "Mydatabases@123"
-// #define USER "root"
-
-// typedef struct
-// {
-//     unsigned long long account_no;
-//     char name[20];
-//     unsigned int age;
-//     char gender[10];
-//     char date_of_birth[11];
-//     char aadhar_no[18];
-//     char pan_no[18];
-//     char phone[15];
-//     char email[20];
-//     unsigned long long balance;
-//     char account_type[10];
-// } Account;
-
-// void mysql_query_excuter(const char *, const char *); // function prototype for connection
-
-// int user_menu();
-
-// void mysql_query_excuter(const char *query, const char *databases)
-// {
-//     MYSQL *conn = mysql_init(NULL);
-
-//     // Check initialization
-//     if (conn == NULL)
-//     {
-//         printf("mysql_init failed\n");
-//         return;
-//     }
-
-//     // Connect to server
-//     if (!mysql_real_connect(conn, "localhost", USER, PASSWD, databases, 0, NULL, 0))
-//     {
-//         printf("Connection failed: %s\n", mysql_error(conn));
-//         mysql_close(conn);
-//         return;
-//     }
-
-//     // Execute query
-//     if (mysql_query(conn, query))
-//     {
-//         printf("Query execution failed: %s\n", mysql_error(conn));
-//         mysql_close(conn);
-//         return;
-//     }
-
-//     mysql_close(conn);
-// }
-
-// int main(int argc, char const *argv[])
-// {
-//     user_menu();
-//     return 0;
-// }
-
-// Account acc;
-// int user_menu()
-// {
-//     printf("Enter your Name: ");
-//     fgets(acc.name, sizeof(acc.name), stdin); // for name
-//     acc.name[strcspn(acc.name, "\n")] = 0;
-//     // printf("%s\n", acc.name);
-
-//     char ageStr[10];
-
-//     printf("Enter your age: ");
-//     fgets(ageStr, sizeof(ageStr), stdin);   // for age
-//     ageStr[strcspn(ageStr, "\n")] = '\0';     // this replace the \n with string terminater
-//     acc.age = (unsigned int)strtoul(ageStr, NULL, 10); // strtoul convert str to unsinged long int
-//     // printf("%u\n", acc.age);
-
-//     char genderS[10];
-
-//     printf("Enter your Gender: ");
-//     fgets(genderS, sizeof(genderS),stdin);
-//     genderS[strcspn(genderS, "\n")] = '\0';
-//     for (int i = 0; genderS[i]; i++) {
-//         genderS[i] = tolower(genderS[i]);
-//     }
-//     genderS[0] = toupper(genderS[0]);
-//     if (strcmp(genderS,"Male") == 0)
-//     {
-//         strcpy(acc.gender,"Male");
-//     }
-//     else if (strcmp(genderS,"Female") == 0)
-//     {
-//         strcpy(acc.gender,"Female");
-//     }
-//     else
-//     {
-//         strcpy(acc.gender,"Other");
-//     }
-//     // printf("%s",acc.gender);
-
-//     printf("Enter the date of birth (yyyy-mm-dd):");
-//     fgets(acc.date_of_birth, sizeof(acc.date_of_birth),stdin);
-//     acc.date_of_birth[strcspn(acc.date_of_birth, "\n")] = '\0';
-//     // printf("%s",acc.date_of_birth);
-
-//     // do the for loop here and get hte dob right
-// }
-
-// code check kar
 #include <stdio.h>
 #include <mysql/mysql.h>
 #include <termios.h>
@@ -237,15 +124,15 @@ int user_menu()
                 time_t t = time(NULL);
                 struct tm *now = localtime(&t);
 
-                int curr_year  = now->tm_year + 1900;
+                int curr_year = now->tm_year + 1900;
                 int curr_month = now->tm_mon + 1;
-                int curr_day   = now->tm_mday;
+                int curr_day = now->tm_mday;
 
                 int age = curr_year - year;
 
                 // If birthday not reached yet
                 if (curr_month < month ||
-                   (curr_month == month && curr_day < day))
+                    (curr_month == month && curr_day < day))
                 {
                     age--;
                 }
