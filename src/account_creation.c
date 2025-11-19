@@ -27,7 +27,8 @@ typedef struct
 } Account;
 
 void buffer();
-void buffer(){
+void buffer()
+{
     int c;
     while ((c = getchar()) != '\n' && c != EOF) // remove buffer
     {
@@ -35,14 +36,16 @@ void buffer(){
 }
 void hideInput();
 void showInput();
-void hideInput() {
+void hideInput()
+{
     struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);
     tty.c_lflag &= ~ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 }
 
-void showInput() {
+void showInput()
+{
     struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);
     tty.c_lflag |= ECHO;
@@ -92,6 +95,7 @@ int main(int argc, char const *argv[])
 Account acc;
 int user_menu()
 {
+    printf("\n\n-----------------Registration Starts!---------------------\n\n");
     // ---------------------- account no ----------------------
     srand(time(NULL));
     char n[13];
@@ -205,27 +209,28 @@ int user_menu()
             {
                 break;
             }
-
         }
         printf("Invalid Aadhar! Try again.\n");
-
-        
     }
     // printf("%s", acc.aadhar_no);
 
     // ---------------------- pan no ----------------------
+    regex_t tt;
+    const char *pattern = "^[A-Z]{5}[0-9]{4}[A-Z]{1}";
     while (1)
     {
 
         printf("Enter the PAN Number :");
         fgets(acc.pan_no, sizeof(acc.pan_no), stdin);
         acc.pan_no[strcspn(acc.pan_no, "\n")] = 0;
-        if (strlen(acc.pan_no) == 10)
+        regcomp(&tt, pattern, REG_EXTENDED);
+        if (regexec(&tt, acc.pan_no, 0, NULL, 0) == 0)
         {
             break;
         }
         printf("Invalid PAN! Try again.\n");
     }
+    regfree(&tt);
     // ---------------------- phone no ----------------------
     while (1)
     {
@@ -253,8 +258,19 @@ int user_menu()
 
         printf("Invalid Phone Number! Try again.\n");
     }
-
-
+    // ---------------------- email ---------------------------
+    regex_t r;
+    const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$" ;
+    while (1)
+    {
+        printf("Enter email: ");
+        fgets(acc.email, sizeof(acc.email), stdin);
+        acc.email[strcspn(acc.email, "\n")] = 0;
+        regcomp(&r, pat, REG_EXTENDED);
+        if (regexec(&r, acc.email, 0, NULL, 0) == 0) break;
+        printf("Invalid Email ! Try again\n");
+    }
+    regfree(&r);
     // ---------------------- ACCOUNT TYPE ----------------------
     char typeS[10];
 
@@ -288,7 +304,7 @@ int user_menu()
         hideInput();
         fgets(acc.password, sizeof(acc.password), stdin);
         showInput();
-        printf("\n");
+        // printf("\n");
 
         acc.password[strcspn(acc.password, "\n")] = 0; // remove newline
 
@@ -301,5 +317,6 @@ int user_menu()
 
         break; // valid password
     }
-    printf("\n\nRegistration complete!\n");
+    showInput();
+    printf("\n\n-----------------Registration complete!---------------------\n");
 }
