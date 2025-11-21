@@ -81,7 +81,7 @@ void mysql_query_excuter(const char *query, const char *databases)
         mysql_close(conn);
         return;
     }
-
+    
     mysql_close(conn);
 }
 
@@ -223,6 +223,7 @@ int user_menu()
     buffer();
 
     // ---------------------- aadhar no ----------------------
+    // int duplcate = 0;
     while (1)
     {
 
@@ -235,6 +236,7 @@ int user_menu()
             for (int i = 0; i < 12; i++)
                 if (!isdigit(acc.aadhar_no[i]))
                     ok = 0;
+
             if (ok)
             {
                 break;
