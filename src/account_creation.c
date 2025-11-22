@@ -104,8 +104,8 @@ void mysql_query_excuter(const char *query,
         res = mysql_store_result(conn);
         int num_cols = mysql_num_fields(res); // <- detects number of selected columns
         int no_of_rows = mysql_num_rows(res);
-        printf("Columns returned: %d\n\n", num_cols);
-        printf("rows returned: %d\n\n", no_of_rows);
+        // printf("Columns returned: %d\n\n", num_cols);
+        // printf("rows returned: %d\n\n", no_of_rows);
 
         while ((row = mysql_fetch_row(res)) && row_count < MAX_ROWS)
         {
@@ -141,6 +141,7 @@ void mysql_query_excuter(const char *query,
 // }
 
 Account acc;
+char x[100];
 int user_menu()
 {
     mysql_query_excuter("create database if not exists accounts", NULL, 0 , NULL , 0 );
@@ -176,7 +177,9 @@ int user_menu()
     printf("Enter your Name: ");
     fgets(acc.name, sizeof(acc.name), stdin); // for name
     acc.name[strcspn(acc.name, "\n")] = 0;
+    strcpy(acc.name, x);
     // printf("%s\n", acc.name);
+    buffer();
 
     // ---------------------- GENDER ----------------------
     char genderS[10];
@@ -434,4 +437,12 @@ int user_menu()
              acc.account_type,
              acc.password);
     mysql_query_excuter(query, "accounts", 0 , NULL , 0);
+
+    printf("-------------Your account-------------\n\n\n");
+    printf("\t\t Account Number  : %lld\n",acc.account_no);
+    printf("\t\t Account Holder  : %s\n",x);
+    printf("\t\t Account Type    : %s\n",acc.account_type);
+    printf("\t\t Account Balance : %.2Lf\n",acc.balance);
+    printf("\n\n");
+    
 }
