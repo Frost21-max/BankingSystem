@@ -31,7 +31,7 @@ void buffer();
 void mysql_query_excuter(const char *query,
                          const char *database,
                          int permission,
-                         char* data[MAX_ROWS][20][MAX_LENGTH],
+                         char data[MAX_ROWS][20][MAX_LENGTH],
                          int* rows_out); // function prototype for connection
 void hideInput();
 void showInput();
@@ -64,13 +64,12 @@ void showInput()
 void mysql_query_excuter(const char *query,
                          const char *database,
                          int permission,
-                         char* data[MAX_ROWS][20][MAX_LENGTH],
+                         char data[MAX_ROWS][20][MAX_LENGTH],
                          int* rows_out)
 {
     MYSQL *conn = mysql_init(NULL);
     MYSQL_RES *res;
     MYSQL_ROW row;
-    char data[MAX_ROWS][20][MAX_LENGTH]; // 20 = max possible columns
     int row_count = 0;
 
     // Check initialization
@@ -131,15 +130,15 @@ void mysql_query_excuter(const char *query,
     }
 }
 
-int main()
-{
-    // user_menu();
-    char dataa[MAX_ROWS][20][MAX_LENGTH];
-    int no_of_row;
-    mysql_query_excuter("select * from account_information","accounts",1,&dataa,&no_of_row);
-    printf("%s",dataa[0][0]);
-    return 0;
-}
+// int main()
+// {
+//     // user_menu();
+//     char dataa[MAX_ROWS][20][MAX_LENGTH];
+//     int no_of_row;
+//     mysql_query_excuter("select * from account_information","accounts",1,dataa,&no_of_row);
+//     printf("%s",dataa[0][0]);
+//     return 0;
+// }
 
 Account acc;
 int user_menu()
