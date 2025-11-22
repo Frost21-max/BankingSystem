@@ -1,5 +1,5 @@
 # read -p "Enter the path :" path
-# git add src
+# git add src/account_creation.c
 # git add include
 git add .
 git commit -m "Changed by ayush"
