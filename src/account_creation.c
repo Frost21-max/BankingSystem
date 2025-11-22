@@ -6,9 +6,8 @@
 #include <string.h>
 #include <time.h>
 #include <regex.h>
-#include "account_creation.h"
 
-#define PASSWD "PiyushBisht2222@"
+#define PASSWD "Mydatabases@123"
 #define USER "root"
 
 typedef struct
