@@ -3,8 +3,17 @@
 #include <string.h>
 #include "account_creation.h"
 
+void mysql_ValuePrinter();
+void mysql_ValueChanger();              // function prototype
+
+
+
 char value[MAX_ROWS][20][MAX_LENGTH];
 int no_of_rows;
+regex_t regex_value;                    // Globle variable
+const char *pattern;
+
+
 
 int main()
 {
@@ -13,8 +22,7 @@ int main()
     int option;
     char account_number_input[20];
     char account_passwd_input[10];
-    regex_t regex_value;
-    const char *pattern;
+    
     printf("\n\n\n-----------------Welcome To Bank------------------\n\n");
     while (1)
     {
@@ -36,7 +44,7 @@ int main()
             buffer();
             while (1)
             {
-                int tester = 0;
+                int tester1 = 0;
                 if (no_of_tries <= 0)
                 {
                     printf("\n\tTo much incorrect attemt\n\n");
@@ -60,10 +68,10 @@ int main()
                     {
                         continue;
                     }
-                    tester = 1;
+                    tester1 = 1;
                     break;
                 }
-                if (tester == 0)
+                if (tester1 == 0)
                 {
                     printf("No match found\n");
                     no_of_tries = no_of_tries - 1;
@@ -77,15 +85,17 @@ int main()
                 no_of_tries = 3;
                 while (1)
                 {
-                    tester = 0;
+                    int tester2 = 0;
                     if (no_of_tries <= 0)
                     {
                         printf("\n\tTo much incorrect attemt\n\n");
                         break;
                     }
-                    printf("Enter your Account Number :");
+                    printf("Enter your Account passwd :");
+                    hideInput();
                     fgets(account_passwd_input, sizeof(account_passwd_input), stdin);
                     account_passwd_input[strcspn(account_passwd_input, "\n")] = '\0';
+                    showInput();
                     if (regexec(&regex_value, account_passwd_input, 0, NULL, 0) != 0)
                     {
                         printf("\nInvalid Account Passwd \n\n");
@@ -100,10 +110,10 @@ int main()
                         {
                             continue;
                         }
-                        tester = 1;
+                        tester2 = 1;
                         break;
                     }
-                    if (tester == 0)
+                    if (tester2 == 0)
                     {
                         printf("No match found\n");
                         no_of_tries = no_of_tries - 1;
@@ -114,8 +124,10 @@ int main()
                     }
                     break;
                 }
-                printf("done\n\n");
-                break;
+                char Query[100];
+                snprintf(Query,sizeof(Query),"select * from account_information where account_no = %s",account_number_input);
+                mysql_query_excuter(Query,"accounts",1,value,&no_of_rows);
+                mysql_ValuePrinter();
             }
 
         default:
@@ -125,10 +137,43 @@ int main()
     return 0;
 }
 
-// int main()
-// {
-//     mysql_query_excuter("select account_no from account_information", "accounts", 1, value, &no_of_rows);
-//     printf("%s\n",value[0][0]);
-//     printf("%d\n",no_of_rows);
-//     return 0;
-// }
+void mysql_ValuePrinter(){
+    printf("\n\n");
+    printf("1) Account Number : %s\n",value[0][0]);
+    printf("2) Account Holder : %s\n",value[0][1]);
+    printf("3) Holder Gender  : %s\n",value[0][2]);
+    printf("4) Date Of Birth  : %s\n",value[0][3]);
+    printf("5) Aadhar Number  : %s\n",value[0][4]);
+    printf("6) Pan Card Number: %s\n",value[0][5]);
+    printf("7) Phone Number   : %s\n",value[0][6]);
+    printf("8) Holder Email   : %s\n",value[0][7]);
+    printf("9) Account Balance: %s\n",value[0][8]);
+    printf("\n\n");
+    mysql_ValueChanger();
+}
+void mysql_ValueChanger(){
+    pattern = "^[ABX]{1}$";
+    regcomp(&regex_value,pattern,REG_EXTENDED);
+    char input_For_Changes[5];
+    while (1)
+    {
+        printf("A: For making changes in data \n");
+        printf("B: For add money in Account \n");
+        printf("X: For Exit to main menu \n\n");
+        printf(":");
+        fgets(input_For_Changes,sizeof(input_For_Changes),stdin);
+        input_For_Changes[strcspn(input_For_Changes, "\n")] = '\0';
+        if (regexec(&regex_value,input_For_Changes,0,NULL,0) == 0){
+            break;
+        }
+        printf("\n");
+    }   
+    // if (input_For_Changes == "A")
+    // {
+    //     printf("Enter the Number corsopounding to you diser change :");
+
+    // }
+    
+    
+    
+}
