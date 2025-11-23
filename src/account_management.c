@@ -1,19 +1,16 @@
 #include <stdio.h>
 #include <regex.h>
 #include <string.h>
+#include <stdlib.h>
 #include "account_creation.h"
 
 void mysql_ValuePrinter();
-void mysql_ValueChanger();              // function prototype
-
-
+void mysql_ValueChanger(char ); // function prototype
 
 char value[MAX_ROWS][20][MAX_LENGTH];
 int no_of_rows;
-regex_t regex_value;                    // Globle variable
+regex_t regex_value; // Globle variable
 const char *pattern;
-
-
 
 int main()
 {
@@ -22,7 +19,7 @@ int main()
     int option;
     char account_number_input[20];
     char account_passwd_input[10];
-    
+
     printf("\n\n\n-----------------Welcome To Bank------------------\n\n");
     while (1)
     {
@@ -125,9 +122,12 @@ int main()
                     break;
                 }
                 char Query[100];
-                snprintf(Query,sizeof(Query),"select * from account_information where account_no = %s",account_number_input);
-                mysql_query_excuter(Query,"accounts",1,value,&no_of_rows);
+                snprintf(Query, sizeof(Query), "select * from account_information where account_no = %s", account_number_input);
+                mysql_query_excuter(Query, "accounts", 1, value, &no_of_rows);
                 mysql_ValuePrinter();
+                mysql_ValueChanger(account_number_input);
+                printf("\n\n\n Done \n\n\n");
+                break;
             }
 
         default:
@@ -137,23 +137,31 @@ int main()
     return 0;
 }
 
-void mysql_ValuePrinter(){
+void mysql_ValuePrinter()
+{
     printf("\n\n");
-    printf("1) Account Number : %s\n",value[0][0]);
-    printf("2) Account Holder : %s\n",value[0][1]);
-    printf("3) Holder Gender  : %s\n",value[0][2]);
-    printf("4) Date Of Birth  : %s\n",value[0][3]);
-    printf("5) Aadhar Number  : %s\n",value[0][4]);
-    printf("6) Pan Card Number: %s\n",value[0][5]);
-    printf("7) Phone Number   : %s\n",value[0][6]);
-    printf("8) Holder Email   : %s\n",value[0][7]);
-    printf("9) Account Balance: %s\n",value[0][8]);
+    printf("1) Account Holder : %s\n", value[0][1]);
+    printf("2) Phone Number   : %s\n", value[0][6]);
+    printf("3) Holder Email   : %s\n", value[0][7]);
+    printf("4) Holder passwd  : %s\n", "******");
     printf("\n\n");
-    mysql_ValueChanger();
 }
-void mysql_ValueChanger(){
+void mysql_ValueChanger(char accNO)
+{
+    char Header_Array[5][20] = {
+        "name",
+        "phone",
+        "email",
+        "password_hash",
+        "balance"};
+    char Display_Array[5][20] = {
+        "Account Holder",
+        "Phone Number",
+        "Holder Email",
+        "Holder passwd",
+        "balance"};
     pattern = "^[ABX]{1}$";
-    regcomp(&regex_value,pattern,REG_EXTENDED);
+    regcomp(&regex_value, pattern, REG_EXTENDED);
     char input_For_Changes[5];
     while (1)
     {
@@ -161,19 +169,42 @@ void mysql_ValueChanger(){
         printf("B: For add money in Account \n");
         printf("X: For Exit to main menu \n\n");
         printf(":");
-        fgets(input_For_Changes,sizeof(input_For_Changes),stdin);
+        fgets(input_For_Changes, sizeof(input_For_Changes), stdin);
         input_For_Changes[strcspn(input_For_Changes, "\n")] = '\0';
-        if (regexec(&regex_value,input_For_Changes,0,NULL,0) == 0){
+        if (regexec(&regex_value, input_For_Changes, 0, NULL, 0) == 0)
+        {
             break;
         }
         printf("\n");
-    }   
-    // if (input_For_Changes == "A")
-    // {
-    //     printf("Enter the Number corsopounding to you diser change :");
+    }
+    pattern = "^[1-4]{1}$";
+    regcomp(&regex_value, pattern, REG_EXTENDED);
+    char Number_input[10];
+    if (strcmp(input_For_Changes, "A") == 0)
+    {
+        while (1)
+        {
+            printf("Enter the number corresponding to your desired change (1-4): ");
+            fgets(Number_input, sizeof(Number_input), stdin);
 
-    // }
-    
-    
-    
+            Number_input[strcspn(Number_input, "\n")] = '\0';
+
+            if (regexec(&regex_value, Number_input, 0, NULL, 0) == 0)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid input! Please enter only ONE digit (1-4).\n");
+            }
+        }
+        // char Input_Input[50];
+        // char mysql_database_key_value[50] = Header_Array[strtoul(Number_input,NULL,10)];
+        // printf("Enter the new %s :", Display_Array[strtoul(Number_input, NULL, 10)]);
+        // fgets(Input_Input, sizeof(Input_Input), stdin); // for name
+        // Input_Input[strcspn(Input_Input, "\n")] = 0;
+        // char QUery[100];
+        // snprintf(QUery,sizeof(QUery),"UPDATE accounts SET %s = '%s' WHERE account_no = %s",mysql_database_key_value,);
+        // mysql_query_excuter();
+    }
 }
