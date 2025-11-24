@@ -2,7 +2,7 @@
 # git add src/account_creation.c
 # git add include
 git add .
-git commit -m "Changed by Ayush"
-git push Ayush main
-git push Piyush main
+git commit -m "Changed by Piyush"
+git push ayush main
+git push piyush main
 clear
