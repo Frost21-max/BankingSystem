@@ -7,7 +7,7 @@
 #include <time.h>
 #include <regex.h>
 
-#define PASSWD "Mydatabases@123"   //<--- mysql password
+#define PASSWD "PiyushBisht2222@"   //<--- mysql password
 #define USER "root"                 //<--- mysql user
 
 #define MAX_ROWS 100                //constant for mysql data array
@@ -212,7 +212,7 @@ int user_menu()
 
     // ---------------------- DATE OF BIRTH ----------------------//
 
-    printf("Enter the date of birth (yyyy-mm-dd): ");
+    printf("Enter your date of birth (yyyy-mm-dd): ");
 
     char dob[32];
     while (1)
@@ -255,7 +255,7 @@ int user_menu()
             }
         }
 
-        printf("Invalid format! Enter again (yyyy-mm-dd): ");
+        printf("Invalid format!\nEnter again (yyyy-mm-dd): ");
     }
 
     // ---------------------- Aadhar No ----------------------//
@@ -263,7 +263,7 @@ int user_menu()
     while (1)
     {
 
-        printf("Enter the aadhar Number :");
+        printf("Enter your Aadhar Number :");
         fgets(acc.aadhar_no, sizeof(acc.aadhar_no), stdin);
         acc.aadhar_no[strcspn(acc.aadhar_no, "\n")] = 0;
         int ok = 1;
@@ -288,7 +288,7 @@ int user_menu()
     while (1)
     {
 
-        printf("Enter the PAN Number :");
+        printf("Enter your PAN Number :");
         fgets(acc.pan_no, sizeof(acc.pan_no), stdin);
         acc.pan_no[strcspn(acc.pan_no, "\n")] = 0;
         regcomp(&tt, pattern, REG_EXTENDED);
@@ -334,7 +334,7 @@ int user_menu()
     const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+(\\.[A-Za-z]{2,})+$";        //this pattern is for General format of Email
     while (1)
     {
-        printf("Enter email: ");
+        printf("Enter your email: ");
         fgets(acc.email, sizeof(acc.email), stdin);
         acc.email[strcspn(acc.email, "\n")] = 0;
         regcomp(&r, pat, REG_EXTENDED);
@@ -351,7 +351,7 @@ int user_menu()
     const char *partten = "^[a-zA-Z]+$";
     while (1)
     {
-        printf("Choose the type of Account: ");
+        printf("Choose the type of Account (SAvings or Current): ");
         fgets(typeS, sizeof(typeS), stdin);
         typeS[strcspn(typeS, "\n")] = '\0';
         regcomp(&tt, partten, REG_EXTENDED);
@@ -408,7 +408,7 @@ int user_menu()
 
     printf("-------------Your account-------------\n\n\n");
     printf("\t\t Account Number  : %lld\n", acc.account_no);
-    printf("\t\t Account Holder  : %s\n", acc.name);                    //account description
+    printf("\t\t Account Holder Name  : %s\n", acc.name);                    //account description
     printf("\t\t Account Type    : %s\n", acc.account_type);
     printf("\t\t Account Balance : %.2Lf\n", acc.balance);
     printf("\n\n");

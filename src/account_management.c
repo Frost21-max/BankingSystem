@@ -28,27 +28,31 @@ int main()
     while (1)
     {
 
-        printf("01) Account Creation\n");
-        printf("02) Account Checker\n");
-        printf("03) Exit\n\n");
+        printf("01) Create New Account\n");
+        printf("02) Check Existing Account\n");
+        printf("03) Exit \n\n");
+        printf("Select an option: ");
         scanf("%d", &option);
         switch (option)
         {
         case 1:
+        //------------------ ACCOUNT CREATION ------------------//
             user_menu();                    //account_creation.c 's funciton is called here
             continue;
 
         case 2:
+        //------------------ ACCOUNT ACCESS ------------------//
             pattern = "^[0-9]{12}$";
             regcomp(&regex_value, pattern, REG_EXTENDED);
             int no_of_tries = 3;
             buffer();
+            //------------------ ACCOUNT NUMBER AND PASSWORD CHECK ------------------//
             while (1)
             {
                 int tester1 = 0;
                 if (no_of_tries <= 0)
                 {
-                    printf("\n\tTo much incorrect attemt\n\n");
+                    printf("\n\tToo many incorrect attempts!\n\n");
                     break;
                 }
                 printf("Enter your Account Number :");
@@ -56,10 +60,10 @@ int main()
                 account_number_input[strcspn(account_number_input, "\n")] = '\0';
                 if (regexec(&regex_value, account_number_input, 0, NULL, 0) != 0)
                 {
-                    printf("\nInvalid Account Number \n\n");
+                    printf("\nInvalid Account Number\n\n");
                     no_of_tries = no_of_tries - 1;
                     if (no_of_tries != 0)
-                        printf("no of tries left is %d\n", no_of_tries);
+                        printf("No of tries left is %d\n", no_of_tries);
                     continue;
                 }
                 mysql_query_excuter("select account_no,password_hash from account_information", "accounts", 1, value, &no_of_rows);
@@ -74,10 +78,10 @@ int main()
                 }
                 if (tester1 == 0)
                 {
-                    printf("No match found\n");
+                    printf("No Match Found\n");
                     no_of_tries = no_of_tries - 1;
                     if (no_of_tries != 0)
-                        printf("no of tries left is %d\n", no_of_tries);
+                        printf("Number of Tries Left is %d\n", no_of_tries);
                     printf("try again\n");
                     continue;
                 }
@@ -89,20 +93,20 @@ int main()
                     int tester2 = 0;
                     if (no_of_tries <= 0)
                     {
-                        printf("\n\tTo much incorrect attemt\n\n");
+                        printf("\n\tToo  many incorrect attempts!\n\n");
                         break;
                     }
-                    printf("Enter your Account passwd :");
+                    printf("Enter your Account Password :");
                     hideInput();
                     fgets(account_passwd_input, sizeof(account_passwd_input), stdin);
                     account_passwd_input[strcspn(account_passwd_input, "\n")] = '\0';
                     showInput();
                     if (regexec(&regex_value, account_passwd_input, 0, NULL, 0) != 0)
                     {
-                        printf("\nInvalid Account Passwd \n\n");
+                        printf("\nInvalid Account Password\n\n");
                         no_of_tries = no_of_tries - 1;
                         if (no_of_tries != 0)
-                            printf("no of tries left is %d\n", no_of_tries);
+                            printf("Number of tries left is %d\n", no_of_tries);
                         continue;
                     }
                     for (int i = 0; i <= no_of_rows; i++)
@@ -119,13 +123,12 @@ int main()
                         printf("No match found\n");
                         no_of_tries = no_of_tries - 1;
                         if (no_of_tries != 0)
-                            printf("no of tries left is %d\n", no_of_tries);
+                            printf("Number of Tries Left is %d\n", no_of_tries);
                         printf("try again\n");
                         continue;
                     }
                     break;
                 }
-
                 char Query[100];
                 snprintf(Query, sizeof(Query), "select * from account_information where account_no = %s", account_number_input);
                 mysql_query_excuter(Query, "accounts", 1, value, &no_of_rows);
@@ -144,17 +147,19 @@ int main()
     }
     return 0;
 }
-
+//------------------ ACCOUNT INFORMATION ------------------//
 void mysql_ValuePrinter()
 {
     printf("\n\n");
-    printf("1) Account Holder : %s\n", value[0][1]);
+    printf("------------------ ACCOUNT INFORMATION ------------------");
+    printf("1) Account Holder Name : %s\n", value[0][1]);
     printf("2) Phone Number   : %s\n", value[0][6]);
-    printf("3) Holder Email   : %s\n", value[0][7]);                    //account holder information 
-    printf("4) Holder passwd  : %s\n", "******");
-    printf("---Holder Balance  : %s  ---\n", value[0][8]);
+    printf("3) Email   : %s\n", value[0][7]);                    //account holder information 
+    printf("4) Password  : %s\n", "******");
+    printf("--- Balance  : %s  ---\n", value[0][8]);
     printf("\n\n");
 }
+
 void mysql_ValueChanger(const char *accNO)
 {
     const char *Header_Array[5] = {
@@ -186,11 +191,12 @@ void mysql_ValueChanger(const char *accNO)
     char input_For_Changes[5];
 
     while (1)
+    //------------------ ACCOUNT ACCESS ------------------//
     {
-        printf("A: For making changes in data \n");
-        printf("B: For add money in Account \n");
-        printf("C: For withdrowl money in Account \n");
-        printf("X: For Exit to main menu \n\n");
+        printf("A: Change Account Information\n");
+        printf("B: Deposit Money\n");
+        printf("C: Withdraw Money\n");
+        printf("X: Return to main menu \n\n");
         printf(": ");
 
         fgets(input_For_Changes, sizeof(input_For_Changes), stdin);
@@ -205,6 +211,7 @@ void mysql_ValueChanger(const char *accNO)
 
     input_For_Changes[0] = toupper(input_For_Changes[0]);
     // Only for option A we go inside
+    //------------------ ACCOUNT UPDATE ------------------//
     if (strcmp(input_For_Changes, "A") == 0)
     {
         // Ask which field (1–4)
@@ -253,13 +260,15 @@ void mysql_ValueChanger(const char *accNO)
 
         mysql_query_excuter(QUery, "accounts", 0, NULL, 0);
     }
+
+    //------------------ DEPOSIT MONEY ------------------//
     if (strcmp(input_For_Changes, "B") == 0)
     {
         char ii[50];
 
         while (1)
         {
-            printf("Enter the add %s: ", Display_Array[4]);
+            printf("Enter The Amount %s: ", Display_Array[4]);
             fgets(ii, sizeof(ii), stdin);
             ii[strcspn(ii, "\n")] = '\0';
             if (!regex_appler(Regex_Array[4], ii))
@@ -281,13 +290,15 @@ void mysql_ValueChanger(const char *accNO)
                  new_balance, accNO);
         mysql_query_excuter(QUEry, "accounts", 0, NULL, 0);
     }
+
+    //------------------ WITHDRAW MONEY ------------------//
     if (strcmp(input_For_Changes, "C") == 0)
     {
         char ii[50];
 
         while (1)
         {
-            printf("Enter the withdraw amount from %s: ", Display_Array[4]);
+            printf("Enter the Withdraw Amount From %s: ", Display_Array[4]);
             fgets(ii, sizeof(ii), stdin);
             ii[strcspn(ii, "\n")] = '\0';
             if (!regex_appler(Regex_Array[4], ii))
