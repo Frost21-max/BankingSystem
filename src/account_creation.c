@@ -7,8 +7,8 @@
 #include <time.h>
 #include <regex.h>
 
-#define PASSWD "Mydatabases@123"
-#define USER "root"
+#define PASSWD "PiyushBisht2222@"   //<--- mysql password
+#define USER "root"                 //<--- mysql user
 #define MAX_ROWS 100
 #define MAX_LENGTH 100
 
@@ -17,7 +17,7 @@ typedef struct
     unsigned long long account_no;
     char name[20];
     char gender[10];
-    char date_of_birth[11];
+    char date_of_birth[12];
     char aadhar_no[18];
     char pan_no[18];
     char phone[15];
@@ -32,7 +32,7 @@ void mysql_query_excuter(const char *query,
                          const char *database,
                          int permission,
                          char data[MAX_ROWS][20][MAX_LENGTH],
-                         int* rows_out); // function prototype for connection
+                         int *rows_out); // function prototype for connection
 void hideInput();
 void showInput();
 int user_menu();
@@ -40,7 +40,7 @@ int user_menu();
 void buffer()
 {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF) // remove buffer
+    while ((c = getchar()) != '\n' && c != EOF) // It removes buffer
     {
     }
 }
@@ -65,7 +65,7 @@ void mysql_query_excuter(const char *query,
                          const char *database,
                          int permission,
                          char data[MAX_ROWS][20][MAX_LENGTH],
-                         int* rows_out)
+                         int *rows_out)
 {
     MYSQL *conn = mysql_init(NULL);
     MYSQL_RES *res;
@@ -104,8 +104,6 @@ void mysql_query_excuter(const char *query,
         res = mysql_store_result(conn);
         int num_cols = mysql_num_fields(res); // <- detects number of selected columns
         *rows_out = mysql_num_rows(res);
-        // printf("Columns returned: %d\n\n", num_cols);
-        // printf("rows returned: %d\n\n", no_of_rows);
 
         while ((row = mysql_fetch_row(res)) && row_count < MAX_ROWS)
         {
@@ -125,25 +123,13 @@ void mysql_query_excuter(const char *query,
 
         mysql_free_result(res);
         mysql_close(conn);
-
-        
     }
 }
-
-// int main()
-// {
-//     // user_menu();
-//     char dataa[MAX_ROWS][20][MAX_LENGTH];
-//     int no_of_row;
-//     mysql_query_excuter("select * from account_information","accounts",1,dataa,&no_of_row);
-//     printf("%s",dataa[0][0]);
-//     return 0;
-// }
 
 Account acc;
 int user_menu()
 {
-    mysql_query_excuter("create database if not exists accounts", NULL, 0 , NULL , 0 );
+    mysql_query_excuter("create database if not exists accounts", NULL, 0, NULL, 0); //<--- mysql table creation
     mysql_query_excuter(
         "CREATE TABLE IF NOT EXISTS account_information ("
         "account_no BIGINT PRIMARY KEY,"
@@ -161,10 +147,12 @@ int user_menu()
         "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
         "no_of_user INT NOT NULL AUTO_INCREMENT UNIQUE"
         ")",
-        "accounts", 0 , NULL , 0);
+        "accounts", 0, NULL, 0);
+
     printf("\n\n-----------------Registration Starts!---------------------\n\n");
-    // ---------------------- account no ----------------------
-        srand(time(NULL));
+
+    // ---------------------- Account no ----------------------//
+    srand(time(NULL));
 
     char n[13];
 
@@ -178,16 +166,13 @@ int user_menu()
     n[12] = '\0';
     acc.account_no = strtoull(n, NULL, 10); // here 10 means base decimal of 10
 
-    // printf("%llu\n", acc.account_no);
-
-    // ---------------------- NAME ----------------------
+    // ---------------------- NAME ----------------------//
     buffer();
     printf("Enter your Name: ");
     fgets(acc.name, sizeof(acc.name), stdin); // for name
     acc.name[strcspn(acc.name, "\n")] = 0;
-    // printf("%s\n", acc.name);
 
-    // ---------------------- GENDER ----------------------
+    // ---------------------- GENDER ----------------------//
     char genderS[10];
     regex_t rre;
     const char *parrrtern = "^[a-zA-Z]+$";
@@ -223,53 +208,45 @@ int user_menu()
         strcpy(acc.gender, "Other");
     }
     regfree(&rre);
-    // printf("%s",acc.gender);
 
-    // ---------------------- DATE OF BIRTH ----------------------
+    // ---------------------- DATE OF BIRTH ----------------------//
 
     printf("Enter the date of birth (yyyy-mm-dd): ");
 
+    char dob[32];
     while (1)
     {
-        fgets(acc.date_of_birth, sizeof(acc.date_of_birth), stdin);
-        acc.date_of_birth[strcspn(acc.date_of_birth, "\n")] = '\0'; // remove newline
+        if (!fgets(dob, sizeof(dob), stdin))
+            continue;
+
+        dob[strcspn(dob, "\n")] = '\0';
 
         int year, month, day;
+        char extra;
 
-        // Check correct format
-        if (sscanf(acc.date_of_birth, "%4d-%2d-%2d", &year, &month, &day) == 3)
+        if (sscanf(dob, "%4d-%2d-%2d%c", &year, &month, &day, &extra) == 3)
         {
-            // Basic logical checks
             if (year >= 1900 && year <= 2025 &&
                 month >= 1 && month <= 12 &&
                 day >= 1 && day <= 31)
             {
-                // -------------------------
-                //   CHECK AGE >= 18
-                // -------------------------
                 time_t t = time(NULL);
                 struct tm *now = localtime(&t);
 
-                int curr_year = now->tm_year + 1900;
-                int curr_month = now->tm_mon + 1;
-                int curr_day = now->tm_mday;
+                int age = now->tm_year + 1900 - year;
 
-                int age = curr_year - year;
-
-                // If birthday not reached yet
-                if (curr_month < month ||
-                    (curr_month == month && curr_day < day))
-                {
+                if (now->tm_mon + 1 < month ||
+                    (now->tm_mon + 1 == month && now->tm_mday < day))
                     age--;
-                }
 
                 if (age >= 18)
                 {
+                    strcpy(acc.date_of_birth, dob);
                     break;
                 }
                 else
                 {
-                    printf("You must be at least 18 years old!\n Enter again: ");
+                    printf("You must be 18+ ! Try again: ");
                     continue;
                 }
             }
@@ -278,10 +255,8 @@ int user_menu()
         printf("Invalid format! Enter again (yyyy-mm-dd): ");
     }
 
-    buffer();
+    // ---------------------- Aadhar No ----------------------//
 
-    // ---------------------- aadhar no ----------------------
-    // int duplcate = 0;
     while (1)
     {
 
@@ -302,9 +277,9 @@ int user_menu()
         }
         printf("Invalid Aadhar! Try again.\n");
     }
-    // printf("%s", acc.aadhar_no);
 
-    // ---------------------- pan no ----------------------
+    // ---------------------- Pan no ----------------------//
+
     regex_t tt;
     const char *pattern = "^[A-Z]{5}[0-9]{4}[A-Z]{1}";
     while (1)
@@ -321,7 +296,8 @@ int user_menu()
         printf("Invalid PAN! Try again.\n");
     }
     regfree(&tt);
-    // ---------------------- phone no ----------------------
+    // ---------------------- Phone no ----------------------//
+
     while (1)
     {
         printf("Enter your Phone Number: ");
@@ -348,7 +324,9 @@ int user_menu()
 
         printf("Invalid Phone Number! Try again.\n");
     }
-    // ---------------------- email ---------------------------
+
+    // ---------------------- Email ---------------------------//
+
     regex_t r;
     const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     while (1)
@@ -362,7 +340,9 @@ int user_menu()
         printf("Invalid Email ! Try again\n");
     }
     regfree(&r);
-    // ---------------------- ACCOUNT TYPE ----------------------
+
+    // ---------------------- ACCOUNT TYPE ----------------------//
+
     char typeS[10];
 
     const char *partten = "^[a-zA-Z]+$";
@@ -397,9 +377,8 @@ int user_menu()
     {
         strcpy(acc.account_type, "Savings");
     }
-    // printf("%s",acc.account_type);
 
-    // ---------------------- PASSWORD ----------------------
+    //------------------------- PassWord ------------------------------//
 
     while (1)
     {
@@ -421,15 +400,18 @@ int user_menu()
         break; // valid password
     }
     showInput();
-    printf("\n\n-----------------Registration complete!---------------------\n");
-    printf("-------------Your account-------------\n\n\n");
-    printf("\t\t Account Number  : %lld\n",acc.account_no);
-    printf("\t\t Account Holder  : %s\n",acc.name);
-    printf("\t\t Account Type    : %s\n",acc.account_type);
-    printf("\t\t Account Balance : %.2Lf\n",acc.balance);
-    printf("\n\n");
-    char query[1000];
 
+    printf("\n\n-----------------Registration complete!---------------------\n");
+
+    printf("-------------Your account-------------\n\n\n");
+    printf("\t\t Account Number  : %lld\n", acc.account_no);
+    printf("\t\t Account Holder  : %s\n", acc.name);
+    printf("\t\t Account Type    : %s\n", acc.account_type);
+    printf("\t\t Account Balance : %.2Lf\n", acc.balance);
+    printf("\n\n");
+    //-------------------------MYsql Query------------------------------//
+
+    char query[1000];
     snprintf(query, sizeof(query),
              "INSERT INTO account_information ("
              "account_no, name, gender, date_of_birth, Aadhar_no, Pan_no, phone, email, "
@@ -448,8 +430,5 @@ int user_menu()
              acc.balance, // long double → %.2Lf
              acc.account_type,
              acc.password);
-    mysql_query_excuter(query, "accounts", 0 , NULL , 0);
-
-    
-    
+    mysql_query_excuter(query, "accounts", 0, NULL, 0);
 }

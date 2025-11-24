@@ -151,7 +151,7 @@ void mysql_ValuePrinter()
     printf("2) Phone Number   : %s\n", value[0][6]);
     printf("3) Holder Email   : %s\n", value[0][7]);
     printf("4) Holder passwd  : %s\n", "******");
-    printf("---Holder Balance  : %s\n", value[0][8]);
+    printf("---Holder Balance  : %s  ---\n", value[0][8]);
     printf("\n\n");
 }
 void mysql_ValueChanger(const char *accNO)
