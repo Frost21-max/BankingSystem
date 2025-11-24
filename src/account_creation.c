@@ -7,7 +7,7 @@
 #include <time.h>
 #include <regex.h>
 
-#define PASSWD "PiyushBisht2222@"   //<--- mysql password
+#define PASSWD "Mydatabases@123"   //<--- mysql password
 #define USER "root"                 //<--- mysql user
 
 #define MAX_ROWS 100                //constant for mysql data array
@@ -22,7 +22,7 @@ typedef struct
     char aadhar_no[18];
     char pan_no[18];                    // structure for mysql push
     char phone[15];
-    char email[20];
+    char email[200];
     long double balance;
     char account_type[10];
     char password[10];
@@ -329,9 +329,8 @@ int user_menu()
     }
 
     // ---------------------- Email ---------------------------//
-
     regex_t r;
-    const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+(\\.[A-Za-z]{2,})+$";        //this pattern is for General format of Email
+    const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";        //this pattern is for General format of Email
     while (1)
     {
         printf("Enter your email: ");

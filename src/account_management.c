@@ -27,7 +27,7 @@ int main()
     printf("\n\n\n-----------------Welcome To Bank------------------\n\n");
     while (1)
     {
-
+        printf("\n");
         printf("01) Create New Account\n");
         printf("02) Check Existing Account\n");
         printf("03) Exit \n\n");
@@ -100,6 +100,7 @@ int main()
                     hideInput();
                     fgets(account_passwd_input, sizeof(account_passwd_input), stdin);
                     account_passwd_input[strcspn(account_passwd_input, "\n")] = '\0';
+                    printf("\n");
                     showInput();
                     if (regexec(&regex_value, account_passwd_input, 0, NULL, 0) != 0)
                     {
@@ -151,8 +152,8 @@ int main()
 void mysql_ValuePrinter()
 {
     printf("\n\n");
-    printf("------------------ ACCOUNT INFORMATION ------------------");
-    printf("1) Account Holder Name : %s\n", value[0][1]);
+    printf("------------------ ACCOUNT INFORMATION ------------------\n\n");
+    printf("1) Account Holder : %s\n", value[0][1]);
     printf("2) Phone Number   : %s\n", value[0][6]);
     printf("3) Email   : %s\n", value[0][7]);                    //account holder information 
     printf("4) Password  : %s\n", "******");
@@ -193,6 +194,7 @@ void mysql_ValueChanger(const char *accNO)
     while (1)
     //------------------ ACCOUNT ACCESS ------------------//
     {
+
         printf("A: Change Account Information\n");
         printf("B: Deposit Money\n");
         printf("C: Withdraw Money\n");
@@ -238,7 +240,9 @@ void mysql_ValueChanger(const char *accNO)
 
         const char *mysql_database_key_value = Header_Array[temp_value];
         const char *regex_pattern = Regex_Array[temp_value];
-
+        if (strcmp(Number_input,"4") == 0){
+            hideInput();
+        }
         while (1)
         {
             printf("Enter the new %s: ", Display_Array[temp_value]);
@@ -252,6 +256,7 @@ void mysql_ValueChanger(const char *accNO)
             }
             break;
         }
+        showInput();
 
         char QUery[256];
         snprintf(QUery, sizeof(QUery),
@@ -306,21 +311,27 @@ void mysql_ValueChanger(const char *accNO)
                 printf("Invalid format\n");
                 continue;
             }
+            char QUEry[256];
+            unsigned long long new_balance;
+            
+            new_balance = strtoull(value[0][8], NULL, 10) - strtoull(ii, NULL, 10);
+            if (strtoull(value[0][8], NULL, 10) < strtoull(ii, NULL, 10))
+            {
+                printf("Insufficient funds\n");
+                continue;
+            }
+            
+            
+            char buffer[50];
+            snprintf(buffer, sizeof(buffer), "%llu", new_balance);
+            snprintf(QUEry, sizeof(QUEry),
+            "UPDATE account_information SET balance = '%llu' WHERE account_no = %s",
+            new_balance, accNO);
+            mysql_query_excuter(QUEry, "accounts", 0, NULL, 0);
             break;
-        }
-        char QUEry[256];
-        unsigned long long new_balance;
-
-        new_balance = strtoull(value[0][8], NULL, 10) - strtoull(ii, NULL, 10);
-
-        char buffer[50];
-        snprintf(buffer, sizeof(buffer), "%llu", new_balance);
-        snprintf(QUEry, sizeof(QUEry),
-                 "UPDATE account_information SET balance = '%llu' WHERE account_no = %s",
-                 new_balance, accNO);
-        mysql_query_excuter(QUEry, "accounts", 0, NULL, 0);
-    } 
-    regfree(&regex_value);
+        } 
+        regfree(&regex_value);
+    }
 }
 
 int regex_appler(const char *pattern, const char *input)
