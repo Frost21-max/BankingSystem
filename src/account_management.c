@@ -9,7 +9,7 @@ void mysql_ValuePrinter();
 void mysql_ValueChanger(const char *accNO);
 int regex_appler(const char *pattern, const char *input);
 char value[MAX_ROWS][20][MAX_LENGTH];
-int no_of_rows;
+int no_of_rows = 0;
 regex_t regex_value; // Globle variable
 const char *pattern;
 int main_menu_continue;
@@ -308,7 +308,6 @@ void mysql_ValueChanger(const char *accNO)
                  new_balance, accNO);
         mysql_query_excuter(QUEry, "accounts", 0, NULL, 0);
     } 
-    if (strcmp(input_For_Changes, "C") == 0) main_menu_continue = 1;
     regfree(&regex_value);
 }
 
@@ -329,3 +328,6 @@ int regex_appler(const char *pattern, const char *input)
 
     return (ret == 0); // 1 = valid, 0 = invalid
 }
+
+
+

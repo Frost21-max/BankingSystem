@@ -103,7 +103,7 @@ void mysql_query_excuter(const char *query,
         // Data fetcher
         res = mysql_store_result(conn);
         int num_cols = mysql_num_fields(res); // <- detects number of selected columns
-        int no_of_rows = mysql_num_rows(res);
+        *rows_out = mysql_num_rows(res);
         // printf("Columns returned: %d\n\n", num_cols);
         // printf("rows returned: %d\n\n", no_of_rows);
 
