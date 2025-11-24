@@ -7,9 +7,10 @@
 #include <time.h>
 #include <regex.h>
 
-#define PASSWD "PiyushBisht2222@"   //<--- mysql password
+#define PASSWD "Mydatabases@123"   //<--- mysql password
 #define USER "root"                 //<--- mysql user
-#define MAX_ROWS 100
+
+#define MAX_ROWS 100                //constant for mysql data array
 #define MAX_LENGTH 100
 
 typedef struct
@@ -19,7 +20,7 @@ typedef struct
     char gender[10];
     char date_of_birth[12];
     char aadhar_no[18];
-    char pan_no[18];
+    char pan_no[18];                    // structure for mysql push
     char phone[15];
     char email[20];
     long double balance;
@@ -27,7 +28,7 @@ typedef struct
     char password[10];
 } Account;
 
-void buffer();
+void buffer();                          
 void mysql_query_excuter(const char *query,
                          const char *database,
                          int permission,
@@ -40,7 +41,7 @@ int user_menu();
 void buffer()
 {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF) // It removes buffer
+    while ((c = getchar()) != '\n' && c != EOF) // It removes buffer( to remove remaining data stuck in ram )
     {
     }
 }
@@ -48,7 +49,7 @@ void buffer()
 void hideInput()
 {
     struct termios tty;
-    tcgetattr(STDIN_FILENO, &tty);
+    tcgetattr(STDIN_FILENO, &tty);                  // it tell the linux terminal to not echo the input by user
     tty.c_lflag &= ~ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 }
@@ -57,13 +58,13 @@ void showInput()
 {
     struct termios tty;
     tcgetattr(STDIN_FILENO, &tty);
-    tty.c_lflag |= ECHO;
+    tty.c_lflag |= ECHO;                             // To undo the changes coused by hideInput
     tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 }
 
 void mysql_query_excuter(const char *query,
                          const char *database,
-                         int permission,
+                         int permission,                            // Funtion to connect mysql to this program and pass query
                          char data[MAX_ROWS][20][MAX_LENGTH],
                          int *rows_out)
 {
@@ -175,7 +176,7 @@ int user_menu()
     // ---------------------- GENDER ----------------------//
     char genderS[10];
     regex_t rre;
-    const char *parrrtern = "^[a-zA-Z]+$";
+    const char *parrrtern = "^[a-zA-Z]+$";                  // this is for limiting the input values
     while (1)
     {
 
@@ -224,14 +225,16 @@ int user_menu()
         int year, month, day;
         char extra;
 
-        if (sscanf(dob, "%4d-%2d-%2d%c", &year, &month, &day, &extra) == 3)
+        if (sscanf(dob, "%4d-%2d-%2d%c", &year, &month, &day, &extra) == 3)            /*this function int value and push it to this
+                                                                                         "%4d-%2d-%2d%c" and convert it into string*/   
         {
             if (year >= 1900 && year <= 2025 &&
                 month >= 1 && month <= 12 &&
                 day >= 1 && day <= 31)
             {
-                time_t t = time(NULL);
-                struct tm *now = localtime(&t);
+                time_t t = time(NULL);                      //this takes the current system time in secounds and store it into t
+                
+                struct tm *now = localtime(&t);             //localtime convert it into calender formate
 
                 int age = now->tm_year + 1900 - year;
 
@@ -281,7 +284,7 @@ int user_menu()
     // ---------------------- Pan no ----------------------//
 
     regex_t tt;
-    const char *pattern = "^[A-Z]{5}[0-9]{4}[A-Z]{1}";
+    const char *pattern = "^[A-Z]{5}[0-9]{4}[A-Z]{1}";              //this pattern is for General format of pan card number
     while (1)
     {
 
@@ -328,7 +331,7 @@ int user_menu()
     // ---------------------- Email ---------------------------//
 
     regex_t r;
-    const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    const char *pat = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+(\\.[A-Za-z]{2,})+$";        //this pattern is for General format of Email
     while (1)
     {
         printf("Enter email: ");
@@ -405,7 +408,7 @@ int user_menu()
 
     printf("-------------Your account-------------\n\n\n");
     printf("\t\t Account Number  : %lld\n", acc.account_no);
-    printf("\t\t Account Holder  : %s\n", acc.name);
+    printf("\t\t Account Holder  : %s\n", acc.name);                    //account description
     printf("\t\t Account Type    : %s\n", acc.account_type);
     printf("\t\t Account Balance : %.2Lf\n", acc.balance);
     printf("\n\n");
@@ -414,7 +417,7 @@ int user_menu()
     char query[1000];
     snprintf(query, sizeof(query),
              "INSERT INTO account_information ("
-             "account_no, name, gender, date_of_birth, Aadhar_no, Pan_no, phone, email, "
+             "account_no, name, gender, date_of_birth, Aadhar_no, Pan_no, phone, email, "           //this function merge the query with all the variable
              "balance, account_type, password_hash"
              ") VALUES ("
              "%llu, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %.2Lf, '%s', '%s'"
@@ -430,5 +433,5 @@ int user_menu()
              acc.balance, // long double → %.2Lf
              acc.account_type,
              acc.password);
-    mysql_query_excuter(query, "accounts", 0, NULL, 0);
+    mysql_query_excuter(query, "accounts", 0, NULL, 0);             // this function call will take query and table and excute it 
 }

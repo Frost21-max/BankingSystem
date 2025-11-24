@@ -3,20 +3,21 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "account_creation.h"
+#include "account_creation.h"                   //user defined hearder file 
 
 void mysql_ValuePrinter();
 void mysql_ValueChanger(const char *accNO);
+
+
 int regex_appler(const char *pattern, const char *input);
 char value[MAX_ROWS][20][MAX_LENGTH];
 int no_of_rows = 0;
-regex_t regex_value; // Globle variable
+regex_t regex_value;                        // Globle variables
 const char *pattern;
 int main_menu_continue;
 
 int main()
 {
-    // mysql_query_excuter("select * from account_information","accounts",1,value,&no_of_rows);
 
     int option;
     int exit__;
@@ -34,7 +35,7 @@ int main()
         switch (option)
         {
         case 1:
-            user_menu();
+            user_menu();                    //account_creation.c 's funciton is called here
             continue;
 
         case 2:
@@ -136,7 +137,7 @@ int main()
         if (main_menu_continue == 0) continue;
 
         case 3:
-            exit__ = 1;
+            exit__ = 1;                 //  exit program
             break;
         }
         if (exit__ == 1) break;
@@ -149,7 +150,7 @@ void mysql_ValuePrinter()
     printf("\n\n");
     printf("1) Account Holder : %s\n", value[0][1]);
     printf("2) Phone Number   : %s\n", value[0][6]);
-    printf("3) Holder Email   : %s\n", value[0][7]);
+    printf("3) Holder Email   : %s\n", value[0][7]);                    //account holder information 
     printf("4) Holder passwd  : %s\n", "******");
     printf("---Holder Balance  : %s  ---\n", value[0][8]);
     printf("\n\n");
