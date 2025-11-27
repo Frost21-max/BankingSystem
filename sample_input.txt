@@ -1,0 +1,1 @@
+TO compile the code user need to run the cammand on the repo dir is ./docs/shared_libery_compiler.sh

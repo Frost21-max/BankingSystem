@@ -7,7 +7,7 @@
 #include <time.h>
 #include <regex.h>
 
-#define PASSWD "PiyushBisht2222@"   //<--- mysql password
+#define PASSWD "Mydatabases@123"   //<--- mysql password
 #define USER "root"                 //<--- mysql user
 
 #define MAX_ROWS 100                //constant for mysql data array
